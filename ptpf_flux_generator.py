@@ -155,7 +155,16 @@ class PTPFFluxGenerator:
             })
             
             return {
+                "success": True,
                 "mode": PTPFMode.GENERATE.value,
+                "prime_context": final_response.context,
+                "task_definition": final_response.task,
+                "vibe_profile": final_response.vibe,
+                "constraints": final_response.constraints,
+                "success_criteria": final_response.success_criteria,
+                "format": final_response.format,
+                "notes": final_response.notes,
+                "role": final_response.role,
                 "response": final_response,
                 "flux_context": flux_context,
                 "session_id": self._generate_session_id()
@@ -164,6 +173,7 @@ class PTPFFluxGenerator:
         except Exception as e:
             logger.error(f"PTPF+FLUX generation error: {str(e)}")
             return {
+                "success": False,
                 "mode": "error",
                 "error": str(e),
                 "flux_context": flux_context

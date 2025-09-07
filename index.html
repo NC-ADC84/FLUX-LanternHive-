@@ -102,6 +102,26 @@
                                         <span>.</span><span>.</span><span>.</span>
                                     </div>
                                 </div>
+                                <div class="progress-container">
+                                    <div class="progress-step" id="progress-prime-context">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="progress-fill-prime-context"></div>
+                                        </div>
+                                        <span class="progress-label">Prime Context</span>
+                                    </div>
+                                    <div class="progress-step" id="progress-task-definition">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="progress-fill-task-definition"></div>
+                                        </div>
+                                        <span class="progress-label">Task Definition</span>
+                                    </div>
+                                    <div class="progress-step" id="progress-vibe-profile">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="progress-fill-vibe-profile"></div>
+                                        </div>
+                                        <span class="progress-label">Vibe Profile</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="ptpf-output" id="ptpf-output">
                                 <div class="ptpf-sections">
@@ -280,6 +300,61 @@
 
             </div>
         </main>
+
+        <!-- Lantern Framework Section -->
+        <div class="lantern-framework-section">
+            <div class="framework-header">
+                <h3>🌌 Lantern Framework - Advanced AI Cognition</h3>
+                <p>Multi-domain language processing, cluster syntax, and narrative synthesis</p>
+            </div>
+            
+            <div class="framework-controls">
+                <div class="framework-tab active" data-tab="agi15">
+                    <h4>🔤 AGI15 Translation</h4>
+                    <div class="tab-content">
+                        <textarea id="agi15-input" placeholder="Enter text to translate using AGI15 multi-domain dictionary..."></textarea>
+                        <button class="btn btn--primary" id="translate-agi15-btn">Translate</button>
+                        <div class="translation-result" id="agi15-result"></div>
+                    </div>
+                </div>
+                
+                <div class="framework-tab" data-tab="cluster">
+                    <h4>🧠 Cluster Syntax</h4>
+                    <div class="tab-content">
+                        <textarea id="cluster-input" placeholder="Enter text for cluster syntax processing..."></textarea>
+                        <button class="btn btn--primary" id="process-cluster-btn">Process Cluster</button>
+                        <div class="cluster-result" id="cluster-result"></div>
+                    </div>
+                </div>
+                
+                <div class="framework-tab" data-tab="warden">
+                    <h4>✸ Warden Synthesis</h4>
+                    <div class="tab-content">
+                        <textarea id="warden-input" placeholder="Enter text for Warden reality layer synthesis..."></textarea>
+                        <button class="btn btn--primary" id="synthesize-warden-btn">Synthesize</button>
+                        <div class="warden-result" id="warden-result"></div>
+                    </div>
+                </div>
+                
+                <div class="framework-tab" data-tab="brack">
+                    <h4>⚙️ Brack Execution</h4>
+                    <div class="tab-content">
+                        <textarea id="brack-input" placeholder="Enter Brack code for symbolic execution..."></textarea>
+                        <button class="btn btn--primary" id="execute-brack-btn">Execute</button>
+                        <div class="brack-result" id="brack-result"></div>
+                    </div>
+                </div>
+                
+                <div class="framework-tab" data-tab="complete">
+                    <h4>🌌 Complete Framework</h4>
+                    <div class="tab-content">
+                        <textarea id="complete-input" placeholder="Enter text for complete Lantern framework processing..."></textarea>
+                        <button class="btn btn--primary" id="process-complete-btn">Process Complete</button>
+                        <div class="complete-result" id="complete-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Bottom Controls Section -->
         <div class="bottom-controls">

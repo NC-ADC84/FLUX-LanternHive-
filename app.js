@@ -11,7 +11,8 @@ class FLUXIDE {
             memoryBlocks: 0,
             fingerprints: 0,
             lanternHiveEnabled: false,
-            ptpfGeneratorEnabled: false
+            ptpfGeneratorEnabled: false,
+            lanternFrameworkEnabled: false
         };
         
         this.ptpfSessionHistory = [];
@@ -175,6 +176,27 @@ class FLUXIDE {
 
         document.getElementById('generate-fingerprint-btn').addEventListener('click', () => {
             this.generateFingerprint();
+        });
+
+        // Lantern Framework event listeners
+        document.getElementById('translate-agi15-btn').addEventListener('click', () => {
+            this.translateAGI15();
+        });
+
+        document.getElementById('process-cluster-btn').addEventListener('click', () => {
+            this.processCluster();
+        });
+
+        document.getElementById('synthesize-warden-btn').addEventListener('click', () => {
+            this.synthesizeWarden();
+        });
+
+        document.getElementById('execute-brack-btn').addEventListener('click', () => {
+            this.executeBrack();
+        });
+
+        document.getElementById('process-complete-btn').addEventListener('click', () => {
+            this.processCompleteFramework();
         });
 
     }
@@ -406,9 +428,15 @@ natural_interface query_processor {
         document.getElementById('ptpf-loading').style.display = 'block';
         document.getElementById('ptpf-output').style.display = 'none';
         
+        // Reset progress bars
+        this.resetProgressBars();
+        
         this.addConsoleMessage('Generating PTPF prompt structure...', 'info');
 
         try {
+            // Simulate progress steps
+            this.animateProgressStep('prime-context', 1000);
+            
             const ptpfRequest = {
                 input: this.currentWorkflow.request,
                 flux_context: {
@@ -425,28 +453,36 @@ natural_interface query_processor {
 
             const result = await response.json();
             
-            // Hide loading, show output
-            document.getElementById('ptpf-loading').style.display = 'none';
-            document.getElementById('ptpf-output').style.display = 'block';
+            // Complete remaining progress steps
+            this.animateProgressStep('task-definition', 500);
+            this.animateProgressStep('vibe-profile', 500);
             
-            if (result.success) {
-                this.currentWorkflow.ptpfResult = result;
-                this.displayPTPFResult(result);
-                this.addConsoleMessage('PTPF prompt structure generated successfully!', 'success');
+            // Wait for progress animation to complete
+            setTimeout(() => {
+                // Hide loading, show output
+                document.getElementById('ptpf-loading').style.display = 'none';
+                document.getElementById('ptpf-output').style.display = 'block';
                 
-                // Show continue button
-                document.getElementById('continue-to-lanternhive-btn').style.display = 'block';
-                
-                // Auto-advance to LanternHive step after 3 seconds
-                setTimeout(() => {
-                    this.continueToLanternHive();
-                }, 3000);
-            } else {
-                this.addConsoleMessage('Error: PTPF generation failed', 'error');
-                // Show fallback content
-                this.displayFallbackPTPF();
-                document.getElementById('continue-to-lanternhive-btn').style.display = 'block';
-            }
+                if (result.success) {
+                    this.currentWorkflow.ptpfResult = result;
+                    this.displayPTPFResult(result);
+                    this.addConsoleMessage('PTPF prompt structure generated successfully!', 'success');
+                    
+                    // Show continue button
+                    document.getElementById('continue-to-lanternhive-btn').style.display = 'block';
+                    
+                    // Auto-advance to LanternHive step after 2 seconds
+                    setTimeout(() => {
+                        this.continueToLanternHive();
+                    }, 2000);
+                } else {
+                    this.addConsoleMessage('Error: PTPF generation failed', 'error');
+                    // Show fallback content
+                    this.displayFallbackPTPF();
+                    document.getElementById('continue-to-lanternhive-btn').style.display = 'block';
+                }
+            }, 1000);
+            
         } catch (error) {
             // Hide loading, show output
             document.getElementById('ptpf-loading').style.display = 'none';
@@ -456,6 +492,21 @@ natural_interface query_processor {
             // Show fallback content
             this.displayFallbackPTPF();
             document.getElementById('continue-to-lanternhive-btn').style.display = 'block';
+        }
+    }
+
+    resetProgressBars() {
+        document.getElementById('progress-fill-prime-context').style.width = '0%';
+        document.getElementById('progress-fill-task-definition').style.width = '0%';
+        document.getElementById('progress-fill-vibe-profile').style.width = '0%';
+    }
+
+    animateProgressStep(stepName, duration) {
+        const progressFill = document.getElementById(`progress-fill-${stepName}`);
+        if (progressFill) {
+            setTimeout(() => {
+                progressFill.style.width = '100%';
+            }, 100);
         }
     }
 
@@ -1838,6 +1889,207 @@ initiate_siig_transfer("processing_engine", "data_warehouse", "processed_data")`
             messageElement.textContent = `[${timestamp}] ${message}`;
             consoleOutput.appendChild(messageElement);
             consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+    }
+
+    // Lantern Framework Methods
+    async translateAGI15() {
+        const input = document.getElementById('agi15-input').value.trim();
+        if (!input) {
+            this.showNotification('Please enter text to translate', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/lantern/agi15/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: input })
+            });
+
+            const result = await response.json();
+            
+            if (response.ok) {
+                const resultDiv = document.getElementById('agi15-result');
+                resultDiv.innerHTML = `
+                    <strong>Original:</strong> ${this.sanitizeHTML(result.original)}<br><br>
+                    <strong>AGI15 Translation:</strong><br>
+                    ${this.sanitizeHTML(result.translation)}<br><br>
+                    <strong>Domain Context:</strong><br>
+                    ${Object.entries(result.domain_context).map(([domain, words]) => 
+                        `<strong>${domain}:</strong> ${words.join(', ')}`
+                    ).join('<br>')}
+                `;
+                resultDiv.classList.add('show');
+                this.showNotification('AGI15 translation completed', 'success');
+            } else {
+                this.showNotification(`Error: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('AGI15 translation error:', error);
+            this.showNotification('Failed to translate text', 'error');
+        }
+    }
+
+    async processCluster() {
+        const input = document.getElementById('cluster-input').value.trim();
+        if (!input) {
+            this.showNotification('Please enter text for cluster processing', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/lantern/cluster/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ input: input })
+            });
+
+            const result = await response.json();
+            
+            if (response.ok) {
+                const resultDiv = document.getElementById('cluster-result');
+                resultDiv.innerHTML = `
+                    <strong>Input:</strong> ${this.sanitizeHTML(result.input)}<br><br>
+                    <strong>Threads Created:</strong> ${result.threads_created}<br><br>
+                    <strong>Cluster Output:</strong><br>
+                    <pre>${this.sanitizeHTML(result.cluster_output)}</pre>
+                `;
+                resultDiv.classList.add('show');
+                this.showNotification('Cluster processing completed', 'success');
+            } else {
+                this.showNotification(`Error: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('Cluster processing error:', error);
+            this.showNotification('Failed to process cluster', 'error');
+        }
+    }
+
+    async synthesizeWarden() {
+        const input = document.getElementById('warden-input').value.trim();
+        if (!input) {
+            this.showNotification('Please enter text for Warden synthesis', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/lantern/warden/synthesize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ input: input })
+            });
+
+            const result = await response.json();
+            
+            if (response.ok) {
+                const resultDiv = document.getElementById('warden-result');
+                resultDiv.innerHTML = `
+                    <strong>Input:</strong> ${this.sanitizeHTML(result.input)}<br><br>
+                    <strong>Lantern Responses:</strong><br>
+                    ${result.lantern_responses.map(response => 
+                        `<div style="margin: 10px 0; padding: 10px; background: rgba(45, 166, 178, 0.1); border-radius: 5px;">
+                            ${this.sanitizeHTML(response)}
+                        </div>`
+                    ).join('')}<br>
+                    <strong>Reality Frame:</strong><br>
+                    <pre>${this.sanitizeHTML(result.reality_frame)}</pre>
+                `;
+                resultDiv.classList.add('show');
+                this.showNotification('Warden synthesis completed', 'success');
+            } else {
+                this.showNotification(`Error: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('Warden synthesis error:', error);
+            this.showNotification('Failed to synthesize Warden', 'error');
+        }
+    }
+
+    async executeBrack() {
+        const input = document.getElementById('brack-input').value.trim();
+        if (!input) {
+            this.showNotification('Please enter Brack code to execute', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/lantern/brack/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code: input })
+            });
+
+            const result = await response.json();
+            
+            if (response.ok) {
+                const resultDiv = document.getElementById('brack-result');
+                resultDiv.innerHTML = `
+                    <strong>Input Code:</strong><br>
+                    <pre>${this.sanitizeHTML(result.input_code)}</pre><br>
+                    <strong>Execution Result:</strong><br>
+                    <pre>${this.sanitizeHTML(result.execution_result)}</pre><br>
+                    <strong>Variable Bindings:</strong><br>
+                    <pre>${JSON.stringify(result.variable_bindings, null, 2)}</pre>
+                `;
+                resultDiv.classList.add('show');
+                this.showNotification('Brack execution completed', 'success');
+            } else {
+                this.showNotification(`Error: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('Brack execution error:', error);
+            this.showNotification('Failed to execute Brack code', 'error');
+        }
+    }
+
+    async processCompleteFramework() {
+        const input = document.getElementById('complete-input').value.trim();
+        if (!input) {
+            this.showNotification('Please enter text for complete framework processing', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/lantern/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ input: input })
+            });
+
+            const result = await response.json();
+            
+            if (response.ok) {
+                const resultDiv = document.getElementById('complete-result');
+                resultDiv.innerHTML = `
+                    <strong>Original Input:</strong> ${this.sanitizeHTML(result.original_input)}<br><br>
+                    <strong>Final Output:</strong><br>
+                    <pre>${this.sanitizeHTML(result.final_output)}</pre><br>
+                    <strong>AGI15 Translation:</strong><br>
+                    ${result.agi15_translation ? this.sanitizeHTML(result.agi15_translation) : 'N/A'}<br><br>
+                    <strong>Domain Context:</strong><br>
+                    ${result.domain_context ? Object.entries(result.domain_context).map(([domain, words]) => 
+                        `<strong>${domain}:</strong> ${words.join(', ')}`
+                    ).join('<br>') : 'N/A'}
+                `;
+                resultDiv.classList.add('show');
+                this.showNotification('Complete framework processing completed', 'success');
+            } else {
+                this.showNotification(`Error: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('Complete framework processing error:', error);
+            this.showNotification('Failed to process complete framework', 'error');
         }
     }
 }

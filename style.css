@@ -2140,6 +2140,61 @@ select.form-control {
   text-align: center;
 }
 
+/* Progress Bars */
+.progress-container {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ffff, #0080ff);
+  border-radius: 4px;
+  width: 0%;
+  transition: width 0.5s ease-in-out;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progress-shimmer 2s infinite;
+}
+
+@keyframes progress-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-label {
+  min-width: 120px;
+  font-size: 0.9rem;
+  color: #e0e0e0;
+  text-align: left;
+}
+
 .ptpf-output {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -2450,4 +2505,142 @@ select.form-control {
   .help-content {
     padding: var(--space-3);
   }
+}
+
+/* Lantern Framework Section */
+.lantern-framework-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin: var(--space-6);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-lg);
+}
+
+.framework-header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.framework-header h3 {
+  color: var(--color-teal-400);
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-2);
+}
+
+.framework-header p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.framework-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+
+.framework-tab {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  transition: all 0.3s ease;
+}
+
+.framework-tab:hover {
+  border-color: var(--color-teal-400);
+  box-shadow: 0 4px 12px rgba(var(--color-teal-500-rgb), 0.1);
+}
+
+.framework-tab h4 {
+  color: var(--color-teal-300);
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.tab-content textarea {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.3s ease;
+}
+
+.tab-content textarea:focus {
+  outline: none;
+  border-color: var(--color-teal-400);
+  box-shadow: 0 0 0 3px rgba(var(--color-teal-500-rgb), 0.1);
+}
+
+.tab-content textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.translation-result,
+.cluster-result,
+.warden-result,
+.brack-result,
+.complete-result {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  min-height: 100px;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  display: none;
+}
+
+.translation-result.show,
+.cluster-result.show,
+.warden-result.show,
+.brack-result.show,
+.complete-result.show {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+/* AGI15 specific styling */
+.translation-result {
+  border-left: 4px solid var(--color-teal-400);
+}
+
+/* Cluster syntax specific styling */
+.cluster-result {
+  border-left: 4px solid var(--color-orange-400);
+}
+
+/* Warden synthesis specific styling */
+.warden-result {
+  border-left: 4px solid var(--color-red-400);
+}
+
+/* Brack execution specific styling */
+.brack-result {
+  border-left: 4px solid var(--color-orange-500);
+}
+
+/* Complete framework specific styling */
+.complete-result {
+  border-left: 4px solid var(--color-teal-300);
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(var(--color-teal-500-rgb), 0.05) 100%);
 }
