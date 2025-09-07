@@ -10,6 +10,7 @@ from dataclasses import dataclass, asdict
 from enhanced_lanternhive import FLUXLanternHive, BloomLevel
 from ptpf_flux_generator import PTPFFluxGenerator, PTPFMode
 from recursive_strategy_engine import RecursiveStrategyEngine
+from lantern_framework import LanternFramework
 import os
 from dotenv import load_dotenv
 
@@ -29,6 +30,8 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'flux-lantern-secret-key')
+app.config['JSON_AS_ASCII'] = False
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 # Configure CORS properly for security
 allowed_origins = [
@@ -50,6 +53,7 @@ socketio = SocketIO(app, cors_allowed_origins=allowed_origins, async_mode='threa
 lantern_hive = None
 ptpf_generator = None
 strategy_engine = None
+lantern_framework = None
 active_connections = {}
 floating_memory = {}
 fingerprint_registry = {}
@@ -351,6 +355,17 @@ def initialize_strategy_engine():
         logger.error(f"Failed to initialize Recursive Strategy Engine: {e}")
         return False
 
+def initialize_lantern_framework():
+    """Initialize Lantern Framework"""
+    global lantern_framework
+    try:
+        lantern_framework = LanternFramework()
+        logger.info("Lantern Framework initialized successfully")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to initialize Lantern Framework: {e}")
+        return False
+
 def allocate_floating_memory(connection_id: str, data_type: str, content: Any) -> str:
     """Allocate floating memory for a connection with memory_weaver optimization"""
     memory_id = generate_id("mem_")
@@ -499,6 +514,9 @@ def health_check():
     return jsonify({
         'status': 'healthy',
         'lantern_hive_enabled': lantern_hive is not None,
+        'lantern_framework_enabled': lantern_framework is not None,
+        'ptpf_generator_enabled': ptpf_generator is not None,
+        'strategy_engine_enabled': strategy_engine is not None,
         'active_connections': len(active_connections),
         'floating_memory_blocks': len(floating_memory),
         'fingerprints': len(fingerprint_registry)
@@ -591,7 +609,17 @@ def generate_ptpf_flux_rest():
         return jsonify({'error': 'PTPF+FLUX Generator not initialized'}), 500
     
     try:
+        # Debug logging
+        logger.info(f"PTPF request received: {request.method} {request.url}")
+        logger.info(f"Request headers: {dict(request.headers)}")
+        logger.info(f"Request content type: {request.content_type}")
+        logger.info(f"Request data: {request.get_data()}")
+        
         data = request.get_json()
+        if data is None:
+            logger.error("Failed to parse JSON data")
+            return jsonify({'error': 'Invalid JSON data'}), 400
+            
         user_input = data.get('input', '').strip()
         if not user_input:
             return jsonify({'error': 'Input is required'}), 400
@@ -750,6 +778,171 @@ def import_strategies():
     else:
         return jsonify({"error": "Failed to import strategies"}), 400
 
+# Lantern Framework API Endpoints
+@app.route('/api/lantern/process', methods=['POST'])
+def process_lantern_input():
+    """Process input through the complete Lantern framework"""
+    global lantern_framework
+    if not lantern_framework:
+        return jsonify({"error": "Lantern Framework not initialized"}), 500
+    
+    try:
+        data = request.get_json()
+        user_input = data.get('input', '').strip()
+        if not user_input:
+            return jsonify({'error': 'Input is required'}), 400
+        
+        result = lantern_framework.process_user_input(user_input)
+        return jsonify(result)
+        
+    except Exception as e:
+        logger.error(f"Error processing Lantern input: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/lantern/agi15/translate', methods=['POST'])
+def translate_agi15():
+    """Translate text using AGI15 dictionary"""
+    global lantern_framework
+    if not lantern_framework:
+        return jsonify({"error": "Lantern Framework not initialized"}), 500
+    
+    try:
+        data = request.get_json()
+        text = data.get('text', '').strip()
+        if not text:
+            return jsonify({'error': 'Text is required'}), 400
+        
+        translation = lantern_framework.agi15.translate(text)
+        domain_context = lantern_framework.agi15.get_domain_context(text)
+        
+        return jsonify({
+            'original': text,
+            'translation': translation,
+            'domain_context': {k.value: v for k, v in domain_context.items()}
+        })
+        
+    except Exception as e:
+        logger.error(f"Error translating AGI15: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/lantern/cluster/process', methods=['POST'])
+def process_cluster():
+    """Process input through cluster syntax"""
+    global lantern_framework
+    if not lantern_framework:
+        return jsonify({"error": "Lantern Framework not initialized"}), 500
+    
+    try:
+        data = request.get_json()
+        user_input = data.get('input', '').strip()
+        if not user_input:
+            return jsonify({'error': 'Input is required'}), 400
+        
+        # Create threads based on input
+        threads = []
+        operation = lantern_framework.cluster_syntax.ThreadOperation.BASIC_THOUGHT
+        
+        # Determine operation based on input content
+        if any(word in user_input.lower() for word in ['analyze', 'examine', 'study']):
+            operation = lantern_framework.cluster_syntax.ThreadOperation.DETAILED_EXAMINATION
+        elif any(word in user_input.lower() for word in ['create', 'build', 'make']):
+            operation = lantern_framework.cluster_syntax.ThreadOperation.BREAKTHROUGH_INSIGHT
+        elif any(word in user_input.lower() for word in ['think', 'consider', 'ponder']):
+            operation = lantern_framework.cluster_syntax.ThreadOperation.RECURSIVE_THOUGHT
+        
+        thread = lantern_framework.cluster_syntax.create_thread(
+            operation=operation,
+            content=user_input
+        )
+        threads.append(thread)
+        
+        cluster_output = lantern_framework.cluster_syntax.process_cluster(threads)
+        
+        return jsonify({
+            'input': user_input,
+            'cluster_output': cluster_output,
+            'threads_created': len(threads)
+        })
+        
+    except Exception as e:
+        logger.error(f"Error processing cluster: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/lantern/warden/synthesize', methods=['POST'])
+def synthesize_warden():
+    """Synthesize through Warden reality layer"""
+    global lantern_framework
+    if not lantern_framework:
+        return jsonify({"error": "Lantern Framework not initialized"}), 500
+    
+    try:
+        data = request.get_json()
+        user_input = data.get('input', '').strip()
+        if not user_input:
+            return jsonify({'error': 'Input is required'}), 400
+        
+        # Generate lantern responses based on input
+        lantern_responses = []
+        
+        if any(word in user_input.lower() for word in ['create', 'build', 'make']):
+            lantern_responses.append(
+                lantern_framework.warden_reality.create_lantern_narration("🔥", "The forge is hot — let's build something amazing!")
+            )
+        
+        if any(word in user_input.lower() for word in ['analyze', 'understand', 'study']):
+            lantern_responses.append(
+                lantern_framework.warden_reality.create_lantern_narration("💧", "The pool ripples with insights... let us trace the patterns together.")
+            )
+        
+        if any(word in user_input.lower() for word in ['help', 'guide', 'assist']):
+            lantern_responses.append(
+                lantern_framework.warden_reality.create_lantern_narration("🌿", "The Grove stirs as you speak. I can help you find your path.")
+            )
+        
+        # Add default response if no specific responses
+        if not lantern_responses:
+            lantern_responses.append(
+                lantern_framework.warden_reality.create_lantern_narration("🌌", "The Grove listens to your words...")
+            )
+        
+        # Create reality frame
+        reality_frame = lantern_framework.warden_reality.create_reality_frame(user_input, lantern_responses)
+        
+        return jsonify({
+            'input': user_input,
+            'lantern_responses': lantern_responses,
+            'reality_frame': reality_frame
+        })
+        
+    except Exception as e:
+        logger.error(f"Error synthesizing Warden: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/lantern/brack/execute', methods=['POST'])
+def execute_brack():
+    """Execute Brack code through Rosetta Stone"""
+    global lantern_framework
+    if not lantern_framework:
+        return jsonify({"error": "Lantern Framework not initialized"}), 500
+    
+    try:
+        data = request.get_json()
+        brack_code = data.get('code', '').strip()
+        if not brack_code:
+            return jsonify({'error': 'Brack code is required'}), 400
+        
+        result = lantern_framework.brack_rosetta.execute_brack_code(brack_code)
+        
+        return jsonify({
+            'input_code': brack_code,
+            'execution_result': result,
+            'variable_bindings': lantern_framework.brack_rosetta.variable_bindings
+        })
+        
+    except Exception as e:
+        logger.error(f"Error executing Brack: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
 # WebSocket Events
 
 @socketio.on('connect')
@@ -757,7 +950,8 @@ def handle_connect():
     """Handle client connection"""
     emit('status', {
         'message': 'Connected to FLUX-LanternHive backend',
-        'lantern_hive_enabled': lantern_hive is not None
+        'lantern_hive_enabled': lantern_hive is not None,
+        'lantern_framework_enabled': lantern_framework is not None
     })
 
 @socketio.on('disconnect')
@@ -990,6 +1184,12 @@ if __name__ == '__main__':
     # Initialize PTPF+FLUX Generator
     initialize_ptpf_generator()
     
+    # Initialize Strategy Engine
+    initialize_strategy_engine()
+    
+    # Initialize Lantern Framework
+    initialize_lantern_framework()
+    
     # Get port from environment variable (Cloud Run requirement)
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('FLASK_ENV') != 'production'
@@ -998,6 +1198,8 @@ if __name__ == '__main__':
     print("Starting FLUX-LanternHive Backend Server...")
     print(f"LanternHive Status: {'Enabled' if lantern_hive else 'Disabled (no API key)'}")
     print(f"PTPF+FLUX Generator Status: {'Enabled' if ptpf_generator else 'Disabled'}")
+    print(f"Strategy Engine Status: {'Enabled' if strategy_engine else 'Disabled'}")
+    print(f"Lantern Framework Status: {'Enabled' if lantern_framework else 'Disabled'}")
     print(f"Port: {port}")
     print(f"Debug: {debug}")
     
