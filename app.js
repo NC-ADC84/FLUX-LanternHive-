@@ -1648,27 +1648,7 @@ initiate_siig_transfer("processing_engine", "data_warehouse", "processed_data")`
 
 
 
-    // PTPF Methods
-    async generatePTPF(prompt) {
-        try {
-            const response = await fetch('/api/ptpf/generate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    prompt: prompt,
-                    mode: 'creative'
-                })
-            });
-
-            const result = await response.json();
-            this.showPTPFOutput(result);
-        } catch (error) {
-            console.error('Error generating PTPF:', error);
-            this.showPTPFOutput({ success: false, error: error.message });
-        }
-    }
+    // PTPF Methods - Duplicate method removed (using the main generatePTPF method above)
 
     showPTPFOutput(result) {
         const output = document.getElementById('ptpf-output');
