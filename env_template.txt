@@ -1,0 +1,30 @@
+# FLUX-LanternHive Integration Environment Configuration
+# Copy this file to .env and fill in your actual values
+
+# OpenAI API Configuration
+# Get your API key from: https://platform.openai.com/api-keys
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Flask Secret Key (for session management and security)
+# Generate a secure random string for production
+SECRET_KEY=your_flask_secret_key_here
+
+# Optional: Custom OpenAI Model Configuration
+# OPENAI_MODEL=gpt-4-turbo
+
+# Optional: Server Configuration
+# HOST=0.0.0.0
+# PORT=5000
+# DEBUG=False
+
+# Optional: Logging Configuration
+# LOG_LEVEL=INFO
+# LOG_FILE=flux_backend.log
+
+# Optional: Rate Limiting
+# MAX_REQUESTS_PER_MINUTE=60
+# MAX_CODE_SIZE=10000
+# MAX_PROMPT_SIZE=5000
+
+
+

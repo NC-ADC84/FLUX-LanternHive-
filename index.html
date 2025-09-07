@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUX Programming Language - Interactive IDE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>FLUX Programming Language</h1>
+                <p>Connection-Oriented Programming with Floating Memory</p>
+                <div class="runtime-status">
+                    <div class="status-item">
+                        <span class="status-label">Active Connections:</span>
+                        <span class="status-value" id="connection-count">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Floating Memory:</span>
+                        <span class="status-value" id="memory-usage">0KB</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Fingerprints:</span>
+                        <span class="status-value" id="fingerprint-count">0</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Pane: Integrated AI Workflow -->
+            <div class="left-pane">
+                <div class="workflow-section">
+                    <div class="workflow-header">
+                        <h3>AI-Powered FLUX Development Workflow</h3>
+                        <p>Complete system that transforms your request into working FLUX code through intelligent strategy, prompt engineering, and code generation</p>
+                    </div>
+                    
+                    <!-- Step 1: User Request -->
+                    <div class="workflow-step active" id="step-request">
+                        <div class="step-header">
+                            <span class="step-number">1</span>
+                            <h4>Describe Your Request</h4>
+                        </div>
+                        <div class="step-content">
+                            <textarea id="user-request-input" placeholder="Example: 'Create a secure user authentication system with database connection and session management' or 'Set up a data processing pipeline that connects to MySQL and transfers data to PostgreSQL'"></textarea>
+                            <button class="btn btn--primary" id="start-workflow-btn">
+                                <span class="btn-icon">🚀</span>
+                                Start AI Workflow
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Strategy Selection -->
+                    <div class="workflow-step" id="step-strategy">
+                        <div class="step-header">
+                            <span class="step-number">2</span>
+                            <h4>AI Strategy Selection</h4>
+                        </div>
+                        <div class="step-content">
+                            <div class="strategy-options" id="strategy-options">
+                                <div class="strategy-card" data-strategy="decompose_problem">
+                                    <h5>Problem Decomposition</h5>
+                                    <p>Break complex problems into manageable components</p>
+                                </div>
+                                <div class="strategy-card" data-strategy="pattern_recognition">
+                                    <h5>Pattern Recognition</h5>
+                                    <p>Identify common patterns and apply proven solutions</p>
+                                </div>
+                                <div class="strategy-card" data-strategy="heuristic_search">
+                                    <h5>Heuristic Search</h5>
+                                    <p>Use intelligent search to find optimal solutions</p>
+                                </div>
+                                <div class="strategy-card" data-strategy="meta_learning">
+                                    <h5>Meta-Learning</h5>
+                                    <p>Learn from similar problems and adapt solutions</p>
+                                </div>
+                            </div>
+                            <div class="selected-strategy" id="selected-strategy" style="display: none;">
+                                <h5>Selected Strategy: <span id="strategy-name"></span></h5>
+                                <p id="strategy-description"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: PTPF Prompt Engineering -->
+                    <div class="workflow-step" id="step-ptpf">
+                        <div class="step-header">
+                            <span class="step-number">3</span>
+                            <h4>PTPF Prompt Engineering</h4>
+                        </div>
+                        <div class="step-content">
+                            <div class="ptpf-loading" id="ptpf-loading" style="display: none;">
+                                <div class="thinking-content">
+                                    <div class="thinking-icon">⚡</div>
+                                    <div class="thinking-text">Generating PTPF prompt structure...</div>
+                                    <div class="thinking-dots">
+                                        <span>.</span><span>.</span><span>.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ptpf-output" id="ptpf-output">
+                                <div class="ptpf-sections">
+                                    <div class="ptpf-section">
+                                        <h5>Prime Context</h5>
+                                        <div id="ptpf-prime-context">Generating prime context based on your request and selected strategy...</div>
+                                    </div>
+                                    <div class="ptpf-section">
+                                        <h5>Task Definition</h5>
+                                        <div id="ptpf-task-definition">Defining task structure for optimal AI processing...</div>
+                                    </div>
+                                    <div class="ptpf-section">
+                                        <h5>Vibe Profile</h5>
+                                        <div id="ptpf-vibe-profile">Creating vibe profile for enhanced prompt engineering...</div>
+                                    </div>
+                                </div>
+                                <div class="ptpf-actions">
+                                    <button class="btn btn--primary" id="continue-to-lanternhive-btn" style="display: none;">
+                                        <span class="btn-icon">🧠</span>
+                                        Continue to LanternHive Analysis
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: LanternHive Analysis -->
+                    <div class="workflow-step" id="step-lanternhive">
+                        <div class="step-header">
+                            <span class="step-number">4</span>
+                            <h4>LanternHive AI Analysis</h4>
+                        </div>
+                        <div class="step-content">
+                            <div class="lanternhive-thinking" id="lanternhive-thinking" style="display: none;">
+                                <div class="thinking-content">
+                                    <div class="thinking-icon">🧠</div>
+                                    <div class="thinking-text">LanternHive AI is analyzing your request with the selected strategy and PTPF context...</div>
+                                    <div class="thinking-dots">
+                                        <span>.</span><span>.</span><span>.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lanternhive-response" id="lanternhive-response" style="display: none;">
+                                <div class="response-content" id="lanternhive-analysis"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: FLUX Code Generation -->
+                    <div class="workflow-step" id="step-flux">
+                        <div class="step-header">
+                            <span class="step-number">5</span>
+                            <h4>FLUX Code Generation & Execution</h4>
+                        </div>
+                        <div class="step-content">
+                            <div class="flux-code-section" id="flux-code-section" style="display: none;">
+                                <h5>Generated FLUX Code:</h5>
+                                <div class="flux-code-display" id="flux-code-display"></div>
+                                <div class="flux-actions">
+                                    <button class="btn btn--primary" id="execute-flux-btn">Execute FLUX Code</button>
+                                    <button class="btn btn--secondary" id="copy-flux-btn">Copy Code</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Workflow Controls -->
+                    <div class="workflow-controls">
+                        <button class="btn btn--secondary" id="reset-workflow-btn">Reset Workflow</button>
+                        <button class="btn btn--help" id="workflow-help-btn">Workflow Help</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Pane: Results and Visualizations -->
+            <div class="right-pane">
+                <!-- Help & Examples Section -->
+                <div class="help-section" id="help-section">
+                    <h3>AI-Powered FLUX Development Workflow</h3>
+                    <div class="help-content">
+                        <div class="help-tab active" data-tab="workflow-overview">
+                            <h4>🔄 Workflow Overview</h4>
+                            <p>The integrated workflow combines three AI systems to transform your request into working FLUX code:</p>
+                            <ol>
+                                <li><strong>Strategy Selection:</strong> Choose how AI should approach your problem</li>
+                                <li><strong>PTPF Engineering:</strong> Generate structured prompts for optimal results</li>
+                                <li><strong>LanternHive Analysis:</strong> AI cognitive analysis with multiple perspectives</li>
+                                <li><strong>FLUX Generation:</strong> Create and execute FLUX code automatically</li>
+                            </ol>
+                        </div>
+                        <div class="help-tab" data-tab="strategies">
+                            <h4>🧠 AI Strategies</h4>
+                            <ul>
+                                <li><strong>Problem Decomposition:</strong> Break complex problems into manageable components</li>
+                                <li><strong>Pattern Recognition:</strong> Apply proven architectural patterns and solutions</li>
+                                <li><strong>Heuristic Search:</strong> Use intelligent algorithms to find optimal approaches</li>
+                                <li><strong>Meta-Learning:</strong> Learn from similar problems and adapt solutions</li>
+                            </ul>
+                        </div>
+                        <div class="help-tab" data-tab="examples">
+                            <h4>💡 Example Requests</h4>
+                            <ul>
+                                <li>"Create a user authentication system with database connection"</li>
+                                <li>"Set up a microservices architecture with API gateway"</li>
+                                <li>"Build a data processing pipeline with real-time analytics"</li>
+                                <li>"Create a secure file transfer system with encryption"</li>
+                                <li>"Design a scalable web application with caching"</li>
+                            </ul>
+                        </div>
+                        <div class="help-tab" data-tab="workflow-tips">
+                            <h4>💡 Workflow Tips</h4>
+                            <ul>
+                                <li>Be specific about your requirements and constraints</li>
+                                <li>Choose the strategy that best fits your problem type</li>
+                                <li>Review the PTPF output to understand the AI's approach</li>
+                                <li>Examine the LanternHive analysis for detailed insights</li>
+                                <li>Customize the generated FLUX code before execution</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Execution Results -->
+                <div class="results-section">
+                    <h3>Execution Results</h3>
+                    <div class="console-output" id="console-output">
+                        <div class="console-line">FLUX Runtime Ready</div>
+                        <div class="console-line">Waiting for program execution...</div>
+                    </div>
+                </div>
+
+                <!-- Connection Visualization -->
+                <div class="visualization-section">
+                    <h3>Active Connections</h3>
+                    <div class="connections-container" id="connections-container">
+                        <div class="placeholder-text">No active connections</div>
+                    </div>
+                </div>
+
+                <!-- Floating Memory Visualization -->
+                <div class="visualization-section">
+                    <h3>Floating Memory Space</h3>
+                    <div class="memory-visualization" id="memory-visualization">
+                        <div class="memory-grid"></div>
+                        <div class="memory-info">
+                            <div class="memory-stat">
+                                <span>Allocated:</span>
+                                <span id="allocated-memory">0 blocks</span>
+                            </div>
+                            <div class="memory-stat">
+                                <span>Available:</span>
+                                <span id="available-memory">1000 blocks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fingerprint Registry -->
+                <div class="visualization-section">
+                    <h3>Fingerprint Registry</h3>
+                    <div class="fingerprint-container" id="fingerprint-container">
+                        <div class="placeholder-text">No fingerprints generated</div>
+                    </div>
+                </div>
+
+                <!-- SIIG Transfer Monitor -->
+                <div class="visualization-section">
+                    <h3>SIIG Transfer Monitor</h3>
+                    <div class="transfer-monitor" id="transfer-monitor">
+                        <div class="transfer-status">Ready for transfers</div>
+                        <div class="transfer-visualization">
+                            <div class="transfer-path"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Bottom Controls Section -->
+        <div class="bottom-controls">
+            <div class="controls-grid">
+                <!-- Connection Controls -->
+                <div class="control-section">
+                    <h4>Connection Controls</h4>
+                    <div class="control-buttons">
+                        <button class="btn btn--secondary" id="create-connection-btn">Create Connection</button>
+                        <button class="btn btn--secondary" id="disconnect-all-btn">Disconnect All</button>
+                    </div>
+                </div>
+
+                <!-- Memory Controls -->
+                <div class="control-section">
+                    <h4>Memory Controls</h4>
+                    <div class="control-buttons">
+                        <button class="btn btn--secondary" id="allocate-memory-btn">Allocate Floating Memory</button>
+                        <button class="btn btn--secondary" id="garbage-collect-btn">Garbage Collect</button>
+                    </div>
+                </div>
+
+                <!-- Transfer Controls -->
+                <div class="control-section">
+                    <h4>Transfer Controls</h4>
+                    <div class="control-buttons">
+                        <button class="btn btn--secondary" id="initiate-transfer-btn">Initiate SIIG Transfer</button>
+                        <button class="btn btn--secondary" id="generate-fingerprint-btn">Generate Fingerprint</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.IO Client Library -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

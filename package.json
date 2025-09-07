@@ -1,0 +1,36 @@
+{
+  "name": "flux-lanternhive-ide",
+  "version": "1.0.0",
+  "description": "FLUX Language IDE with LanternHive Cognitive Integration",
+  "main": "app.js",
+  "scripts": {
+    "start": "python flux_backend.py",
+    "dev": "python flux_backend.py",
+    "lint": "eslint app.js && stylelint style.css",
+    "lint:js": "eslint app.js",
+    "lint:css": "stylelint style.css",
+    "fix": "eslint app.js --fix && stylelint style.css --fix",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "flux",
+    "lanternhive",
+    "cognitive",
+    "ide",
+    "agi",
+    "programming"
+  ],
+  "author": "BlackBoxAI",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "stylelint": "^16.2.1",
+    "stylelint-config-standard-scss": "^13.0.0"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.7.5"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

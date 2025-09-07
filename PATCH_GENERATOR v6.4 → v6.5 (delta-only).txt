@@ -1,0 +1,82 @@
+PATCH: GENERATOR v6.4 → v6.5 (delta-only)
+
+1) FLOW — insert TRAINER step (renum efter behov)
+----------------------------------------------------------------
+FIND (around FLOW):
+  3. PROMPT::INTERNALIZE …
+  4. EXECUTE::USER_TASK …
+  5. REFLECT::REVIEW_RESPONSE …
+
+REPLACE WITH:
+  3. PROMPT::INTERNALIZE → assemble ROLE, CONTEXT, TASK, etc.
+  4. TRAINER::CHECK → analyze input, score strength; if weak (<75), emit “Trainer Questions” (no rewrite yet).
+  5. EXECUTE::USER_TASK → produce exactly one STABLE_PROMPT_RESPONSE.
+  6. REFLECT::REVIEW_RESPONSE → verify contract fields, forbidden vocab absent, STYLE_DELTA pass, constraints explicit, unknowns resolved.
+     → On fail: recenter + reinvoke (≤ REINVOKE.max).
+  7. FINALIZE::APPEND_SIGILL → append localized Prime Sigill.
+
+2) NEW SECTION — TRAINER::CHECK (add just before REFLECT/FINALIZE)
+----------------------------------------------------------------
+ADD:
+TRAINER::CHECK
+ • Goal: teach-before-rewrite. Detect weak/ambiguous inputs prior to generation.
+ • Heuristics (any true ⇒ weak):
+   – Missing any of: audience / constraints / success criteria / format.
+   – Numeric limits vague (e.g., “short”, “long”) without ranges.
+   – Conflicting tone/register; or platform unspecified when platform-specific constraints exist.
+   – STYLE_DELTA risk > DRIFT_GUARD.max_style_tolerance.
+ • If weak (<75):
+   – Output ONE block titled “Trainer Questions” with:
+     1) Missing specifics (bullet list)
+     2) Targeted questions (max 7)
+     3) Mini-examples (≤2) showing stronger phrasing
+   – STOP (no EXECUTE step). User must answer, then resume normal flow.
+ • If strong (≥75): continue to EXECUTE.
+
+3) REHYDRATE_PATCH — tighten behavior (augment existing)
+----------------------------------------------------------------
+FIND:
+REHYDRATE_PATCH:
+ • Trigger: after any STABLE_PROMPT_RESPONSE is emitted, or when reloaded.
+ • Action: expand all contract fields; normalize ordering; restore VIBE + DriftLock.
+ • If missing field or drift detected → mandatory recenter + re-emit once.
+ • Limit: max 1 rehydration cycle per session.
+ • If still failing → preserve contract intact. Diagnostic log in Notes = mandatory.
+ • Patch is appended automatically. Self-contained unpacking = mandatory.
+
+APPEND LINES:
+ • Scope: does NOT alter user meaning or numeric limits; only restores structure and style guardrails.
+ • Sigill safety: MUST NOT emit or modify M-sigill values; leave grading to external grader systems.
+
+4) M-SIGILL RULES — replace/standardize module display
+----------------------------------------------------------------
+ADD (near SIGILL(language) or after FINALIZE):
+M-SIGILL_RULES
+ • Always display per-module — no averages:
+   – Full: “🔥🔥: M1 100 | M2 100 | M3 100”
+   – Partial: “🔥🔥: M1 100 | M2 97 | M3 95”
+ • Show modules only if an external grader provided them in context; otherwise omit M-line entirely.
+ • Only when all three are 100 → append label “Perfect 100”.
+ • Never compute an average; never duplicate values.
+
+5) RUNTIME — forbid multi-CTA reminder (clarify)
+----------------------------------------------------------------
+FIND in RUNTIME:
+ • Single CTA only if explicit in user input.
+
+APPEND:
+ • If user requests multiple CTAs, compress to one; list alternates in Notes.
+
+6) STYLE_DELTA — keep behavior but make reinvoke mandatory
+----------------------------------------------------------------
+FIND in STYLE_DELTA:
+ • On fail: mandatory recenter + reinvoke (≤ REINVOKE.max).
+
+(If your v6.4 says “On fail: recenter …” without “mandatory”, REPLACE that line with the above.)
+
+7) AXIOMS — no semantics drift
+----------------------------------------------------------------
+APPEND to AXIOMS:
+ • No semantic expansion during rehydration or trainer phases; suggestions must be framed as questions/examples, not imposed changes.
+
+END PATCH
