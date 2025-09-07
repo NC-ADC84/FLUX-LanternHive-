@@ -65,7 +65,7 @@ def start_server():
     
     # Import and start the server
     try:
-        from flux_backend import app, socketio, initialize_lantern_hive, initialize_ptpf_generator, initialize_strategy_engine
+        from flux_backend import app, socketio, initialize_lantern_hive, initialize_ptpf_generator, initialize_strategy_engine, initialize_lantern_framework
         
         # Initialize LanternHive
         print("🧠 Initializing LanternHive...")
@@ -81,6 +81,11 @@ def start_server():
         print("🔄 Initializing Recursive Strategy Engine...")
         strategy_status = initialize_strategy_engine()
         print(f"Recursive Strategy Engine Status: {'✓ Enabled' if strategy_status else '⚠️  Disabled'}")
+        
+        # Initialize Lantern Framework
+        print("🏮 Initializing Lantern Framework...")
+        lantern_framework_status = initialize_lantern_framework()
+        print(f"Lantern Framework Status: {'✓ Enabled' if lantern_framework_status else '⚠️  Disabled'}")
         
         # Get port from environment variable (Cloud Run requirement)
         port = int(os.getenv('PORT', 5000))
@@ -119,6 +124,10 @@ def start_server():
         print("  - GET  /api/connections (Get active connections)")
         print("  - GET  /api/memory (Get floating memory)")
         print("  - GET  /api/fingerprints (Get fingerprints)")
+        print("  - POST /api/lantern/agi15/translate (AGI15 translation)")
+        print("  - POST /api/lantern/cluster/process (Cluster syntax processing)")
+        print("  - POST /api/lantern/warden/synthesize (Warden reality synthesis)")
+        print("  - POST /api/lantern/brack/execute (Brack code execution)")
         
         print("\n" + "=" * 50)
         print("🎯 Frontend Access:")
