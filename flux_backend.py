@@ -29,7 +29,22 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'flux-lantern-secret-key')
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
+
+# Configure CORS properly for security
+allowed_origins = [
+    'http://localhost:3000',
+    'http://localhost:5000', 
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5000',
+    'https://flux-lanternhive-231986304766.us-central1.run.app'
+]
+
+# Add custom domain if specified in environment
+custom_domain = os.getenv('ALLOWED_ORIGIN')
+if custom_domain:
+    allowed_origins.append(custom_domain)
+
+socketio = SocketIO(app, cors_allowed_origins=allowed_origins, async_mode='threading')
 
 # Global instances
 lantern_hive = None

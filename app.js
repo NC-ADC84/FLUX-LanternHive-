@@ -22,6 +22,14 @@ class FLUXIDE {
         this.init();
     }
 
+    // Security: Sanitize HTML to prevent XSS attacks
+    sanitizeHTML(str) {
+        if (typeof str !== 'string') return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
     init() {
         this.initializeSocket();
         this.setupEventListeners();
@@ -402,8 +410,7 @@ natural_interface query_processor {
 
         try {
             const ptpfRequest = {
-                user_input: this.currentWorkflow.request,
-                strategy: this.currentWorkflow.strategy,
+                input: this.currentWorkflow.request,
                 flux_context: {
                     task: 'Generate structured prompt for FLUX code generation',
                     strategy: this.currentWorkflow.strategy
@@ -923,10 +930,17 @@ initiate_siig_transfer("adaptation_service", "learning_algorithm", "meta_learnin
         connections.forEach(connId => {
             const node = document.createElement('div');
             node.className = 'connection-node active';
-            node.innerHTML = `
-                <div class="connection-name">${connId}</div>
-                <div class="connection-status">Active</div>
-            `;
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'connection-name';
+            nameDiv.textContent = connId; // Safe: using textContent instead of innerHTML
+            
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'connection-status';
+            statusDiv.textContent = 'Active';
+            
+            node.appendChild(nameDiv);
+            node.appendChild(statusDiv);
             container.appendChild(node);
         });
     }
@@ -1565,9 +1579,17 @@ initiate_siig_transfer("processing_engine", "data_warehouse", "processed_data")`
         
         if (response && content) {
             if (result.success) {
-                content.innerHTML = `<div class="response-success">${result.analysis || result.message}</div>`;
+                const successDiv = document.createElement('div');
+                successDiv.className = 'response-success';
+                successDiv.textContent = result.analysis || result.message;
+                content.innerHTML = '';
+                content.appendChild(successDiv);
             } else {
-                content.innerHTML = `<div class="response-error">Error: ${result.error}</div>`;
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'response-error';
+                errorDiv.textContent = `Error: ${result.error}`;
+                content.innerHTML = '';
+                content.appendChild(errorDiv);
             }
             response.style.display = 'block';
         }
@@ -1603,9 +1625,17 @@ initiate_siig_transfer("processing_engine", "data_warehouse", "processed_data")`
 
         if (output && content) {
             if (result.success) {
-                content.innerHTML = `<div class="output-success">${result.generated_prompt || result.message}</div>`;
+                const successDiv = document.createElement('div');
+                successDiv.className = 'output-success';
+                successDiv.textContent = result.generated_prompt || result.message;
+                content.innerHTML = '';
+                content.appendChild(successDiv);
             } else {
-                content.innerHTML = `<div class="output-error">Error: ${result.error}</div>`;
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'output-error';
+                errorDiv.textContent = `Error: ${result.error}`;
+                content.innerHTML = '';
+                content.appendChild(errorDiv);
             }
             output.style.display = 'block';
         }
@@ -1635,9 +1665,17 @@ initiate_siig_transfer("processing_engine", "data_warehouse", "processed_data")`
 
         if (output && content) {
             if (result.success) {
-                content.innerHTML = `<div class="output-success">${result.solution || result.message}</div>`;
+                const successDiv = document.createElement('div');
+                successDiv.className = 'output-success';
+                successDiv.textContent = result.solution || result.message;
+                content.innerHTML = '';
+                content.appendChild(successDiv);
             } else {
-                content.innerHTML = `<div class="output-error">Error: ${result.error}</div>`;
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'output-error';
+                errorDiv.textContent = `Error: ${result.error}`;
+                content.innerHTML = '';
+                content.appendChild(errorDiv);
             }
             output.style.display = 'block';
         }
