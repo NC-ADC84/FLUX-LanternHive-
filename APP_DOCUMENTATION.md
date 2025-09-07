@@ -117,7 +117,7 @@ FLUX-LanternHive IDE is a revolutionary AI-powered programming environment that 
 ### **Backend Architecture**
 
 - **Framework**: Python Flask with SocketIO
-- **AI Integration**: OpenAI GPT-4 with custom LanternHive framework
+- **AI Integration**: OpenAI GPT-5 with custom LanternHive framework
 - **Database**: In-memory storage with connection management
 - **Security**: CORS, XSS prevention, input validation
 - **Deployment**: Google Cloud Run with Docker containerization

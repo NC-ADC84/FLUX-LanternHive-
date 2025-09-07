@@ -24,7 +24,7 @@ A comprehensive AI-powered development platform that combines the FLUX programmi
 
 - **Backend**: Python Flask with Socket.IO for real-time communication
 - **Frontend**: HTML5, CSS3, JavaScript with modern UI/UX
-- **AI Integration**: OpenAI GPT-4 for cognitive analysis
+- **AI Integration**: OpenAI GPT-5 for cognitive analysis
 - **Deployment**: Google Cloud Run with Docker containerization
 - **Database**: PostgreSQL with Redis caching
 
@@ -158,7 +158,7 @@ For support and questions:
 
 ## 🎉 Acknowledgments
 
-- OpenAI for GPT-4 API
+- OpenAI for GPT-5 API
 - Google Cloud Platform for hosting infrastructure
 - The FLUX programming language community
 - All contributors and testers

@@ -114,7 +114,7 @@ update_floating_memory("sessionData", "{\"newData\": \"value\"}")
 
 - **Backend**: Python Flask with SocketIO
 - **Frontend**: HTML5, CSS3, JavaScript
-- **AI**: OpenAI GPT-4 with LanternHive framework
+- **AI**: OpenAI GPT-5 with LanternHive framework
 - **Deployment**: Google Cloud Run with Docker
 - **Security**: CORS protection, XSS prevention, input validation
 
