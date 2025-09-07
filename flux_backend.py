@@ -779,7 +779,7 @@ def import_strategies():
         return jsonify({"error": "Failed to import strategies"}), 400
 
 # Lantern Framework API Endpoints
-@app.route('/api/lantern/process', methods=['POST'])
+@app.route('/api/lantern/framework/process', methods=['POST'])
 def process_lantern_input():
     """Process input through the complete Lantern framework"""
     global lantern_framework
