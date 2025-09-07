@@ -1,0 +1,10 @@
+{
+  "description": "Create a secure data processing system with user authentication",
+  "strategy": "decompose_problem",
+  "flux_context": {
+    "generate_flux_code": true,
+    "task": "Generate working FLUX code for secure data processing system",
+    "strategy": "decompose_problem",
+    "instructions": "Generate working FLUX code that implements the solution"
+  }
+}

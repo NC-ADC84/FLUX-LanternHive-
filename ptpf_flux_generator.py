@@ -369,22 +369,40 @@ This prompt was generated with PrimeTalk Vibe-Context Coding (PTPF) by Lyra the 
     
     def _parse_user_input(self, user_input: str) -> Dict[str, str]:
         """Parse user input for structured components"""
-        # Simple parsing - can be enhanced with NLP
+        # Enhanced parsing to extract structured components
         parsed = {"goal": user_input}
-        
-        # Look for common patterns
-        if "for" in user_input.lower():
-            parts = user_input.split(" for ")
-            if len(parts) > 1:
-                parsed["goal"] = parts[0].strip()
-                parsed["audience"] = parts[1].strip()
-        
-        if "constraints:" in user_input.lower():
-            parts = user_input.split("constraints:")
-            if len(parts) > 1:
-                parsed["goal"] = parts[0].strip()
-                parsed["constraints"] = parts[1].strip()
-        
+
+        # Extract constraints (case insensitive)
+        import re
+        constraints_match = re.search(r'constraints:\s*([^.]*)', user_input, re.IGNORECASE)
+        if constraints_match:
+            parsed["constraints"] = constraints_match.group(1).strip()
+            # Remove constraints from goal
+            parsed["goal"] = re.sub(r'constraints:\s*[^.]*\.?\s*', '', user_input, flags=re.IGNORECASE).strip()
+
+        # Extract format (case insensitive)
+        format_match = re.search(r'format:\s*([^.]*)', user_input, re.IGNORECASE)
+        if format_match:
+            format_text = format_match.group(1).strip()
+            # Check if format contains "for" to extract audience
+            if " for " in format_text.lower():
+                format_parts = format_text.split(" for ", 1)
+                parsed["format"] = format_parts[0].strip()
+                parsed["audience"] = format_parts[1].strip()
+            else:
+                parsed["format"] = format_text
+            # Remove format from goal if not already removed
+            if "format" not in parsed or not parsed["format"]:
+                parsed["goal"] = re.sub(r'format:\s*[^.]*\.?\s*', '', parsed["goal"], flags=re.IGNORECASE).strip()
+
+        # Extract audience if not already extracted (case insensitive)
+        if "audience" not in parsed or not parsed["audience"]:
+            audience_match = re.search(r'for\s+([^.]*)', user_input, re.IGNORECASE)
+            if audience_match:
+                parsed["audience"] = audience_match.group(1).strip()
+                # Remove audience from goal
+                parsed["goal"] = re.sub(r'for\s+[^.]*\.?\s*', '', parsed["goal"], flags=re.IGNORECASE).strip()
+
         return parsed
     
     def _determine_role(self, parsed_input: Dict[str, str]) -> str:
