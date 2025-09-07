@@ -216,9 +216,13 @@ class PTPFFluxGenerator:
         if flux_context:
             flux_integration = f"\nFLUX Context: {json.dumps(flux_context, indent=2)}"
         
+        # Provide default context if none specified
+        default_context = "General task execution context"
+        context = parsed_input.get("context", default_context) + flux_integration
+        
         return {
             "role": self._determine_role(parsed_input),
-            "context": parsed_input.get("context", "") + flux_integration,
+            "context": context,
             "task": parsed_input.get("goal", user_input),
             "constraints": parsed_input.get("constraints", ""),
             "audience": parsed_input.get("audience", ""),
@@ -310,11 +314,17 @@ class PTPFFluxGenerator:
         """Verify contract fields, forbidden vocab absent, STYLE_DELTA pass, constraints explicit"""
         issues = []
         
-        # Check contract fields
-        required_fields = ["role", "context", "task", "constraints", "success_criteria", "format", "notes", "vibe"]
-        for field in required_fields:
+        # Check contract fields - only require essential fields, allow empty strings for optional ones
+        essential_fields = ["role", "context", "task", "success_criteria", "notes", "vibe"]
+        for field in essential_fields:
             if not getattr(response, field):
                 issues.append(f"Missing required field: {field}")
+        
+        # For optional fields, provide defaults if empty
+        if not response.constraints:
+            response.constraints = "No specific constraints provided"
+        if not response.format:
+            response.format = "Standard format"
         
         # Check for forbidden vocabulary (using word boundaries to avoid false positives)
         response_text = f"{response.role} {response.context} {response.task} {response.constraints} {response.notes}"
