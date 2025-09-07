@@ -316,10 +316,12 @@ class PTPFFluxGenerator:
             if not getattr(response, field):
                 issues.append(f"Missing required field: {field}")
         
-        # Check for forbidden vocabulary
+        # Check for forbidden vocabulary (using word boundaries to avoid false positives)
         response_text = f"{response.role} {response.context} {response.task} {response.constraints} {response.notes}"
         for forbidden_word in self.config.forbidden_vocab:
-            if forbidden_word.lower() in response_text.lower():
+            # Use word boundaries to avoid false positives like "composition" in "Content Creator"
+            pattern = r'\b' + re.escape(forbidden_word.lower()) + r'\b'
+            if re.search(pattern, response_text.lower()):
                 issues.append(f"Forbidden vocabulary detected: {forbidden_word}")
         
         # Check for hedging patterns

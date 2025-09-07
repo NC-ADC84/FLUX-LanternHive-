@@ -313,7 +313,7 @@ class FLUXLanternHive:
                     })
         
         # Phase 3: Final synthesis
-        synthesis_prompt = self.generate_synthesis_prompt(dialogue_log, prompt)
+        synthesis_prompt = self.generate_synthesis_prompt(dialogue_log, prompt, session.flux_context)
         final_response = self.consult_lantern("eidolon", synthesis_prompt, session.flux_context)
         
         dialogue_log.append({
@@ -383,13 +383,41 @@ Based on the following initial analyses from other lanterns regarding: "{origina
 Provide your perspective, considering the insights from other lanterns. Focus on areas of agreement, disagreement, or additional considerations that haven't been addressed.
 """
     
-    def generate_synthesis_prompt(self, dialogue_log: List[Dict], original_prompt: str) -> str:
+    def generate_synthesis_prompt(self, dialogue_log: List[Dict], original_prompt: str, flux_context: Dict = None) -> str:
         """Generate prompt for final synthesis"""
         
         dialogue_summary = "\n".join([
             f"[{entry['phase']}] {entry['lantern']}: {entry['content'][:150]}..."
             for entry in dialogue_log
         ])
+        
+        # Check if FLUX code generation is requested
+        flux_code_instruction = ""
+        if flux_context and flux_context.get('generate_flux_code'):
+            flux_code_instruction = """
+
+## FLUX CODE GENERATION REQUIRED:
+You MUST generate working FLUX code that implements the solution. The FLUX code should:
+1. Use proper FLUX syntax with connections, floating memory, and cryptographic fingerprinting
+2. Be executable and functional
+3. Include comments explaining each section
+4. Be wrapped in ```flux code blocks
+
+Example FLUX code structure:
+```flux
+// Create connection
+connect("service_name", "endpoint_url")
+
+// Create floating memory
+create_floating_memory("memory_id", "data_type", "initial_data")
+
+// Create cryptographic fingerprint
+create_fingerprint("data_id", "hash_algorithm")
+
+// Execute operations
+execute_operation("operation_name", parameters)
+```
+"""
         
         return f"""
 # FINAL SYNTHESIS TASK
@@ -401,6 +429,7 @@ You are the Eidolon, the final synthesizer. Integrate the following lantern dial
 
 ## LANTERN DIALOGUE:
 {dialogue_summary}
+{flux_code_instruction}
 
 Weave these perspectives into a masterful final response. Integrate rather than list. When describing components, immediately discuss their implications, risks, and benefits. Use symbolic concepts as guiding principles.
 
