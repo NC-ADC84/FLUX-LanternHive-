@@ -510,6 +510,21 @@ natural_interface query_processor {
         }
     }
 
+    resetLanternHiveProgressBars() {
+        document.getElementById('progress-fill-cognitive-analysis').style.width = '0%';
+        document.getElementById('progress-fill-strategy-application').style.width = '0%';
+        document.getElementById('progress-fill-flux-generation').style.width = '0%';
+    }
+
+    animateLanternHiveProgressStep(stepName, duration) {
+        const progressFill = document.getElementById(`progress-fill-${stepName}`);
+        if (progressFill) {
+            setTimeout(() => {
+                progressFill.style.width = '100%';
+            }, 100);
+        }
+    }
+
     displayPTPFResult(result) {
         document.getElementById('ptpf-prime-context').textContent = result.prime_context || 'Generated prime context...';
         document.getElementById('ptpf-task-definition').textContent = result.task_definition || 'Generated task definition...';
@@ -533,8 +548,14 @@ natural_interface query_processor {
 
     async runLanternHiveAnalysis() {
         this.showLanternHiveThinking();
+        
+        // Reset LanternHive progress bars
+        this.resetLanternHiveProgressBars();
 
         try {
+            // Simulate progress steps
+            this.animateLanternHiveProgressStep('cognitive-analysis', 1500);
+            
             const lanternRequest = {
                 prompt: this.currentWorkflow.request,
                 flux_context: {
@@ -552,24 +573,32 @@ natural_interface query_processor {
 
             const result = await response.json();
             
-            if (result.final_response) {
-                this.currentWorkflow.lanternhiveResult = result;
-                this.displayLanternHiveResult(result);
-                
-                // Generate FLUX code
-                const fluxCode = this.generateFLUXFromWorkflow();
-                this.currentWorkflow.fluxCode = fluxCode;
-                
-                // Auto-advance to FLUX step
-                setTimeout(() => {
-                    this.completeStep('step-lanternhive');
-                    this.activateStep('step-flux');
-                    this.displayFLUXCode(fluxCode);
-                }, 2000);
-            } else {
-                this.hideLanternHiveThinking();
-                this.addConsoleMessage('Error: LanternHive analysis failed', 'error');
-            }
+            // Complete remaining progress steps
+            this.animateLanternHiveProgressStep('strategy-application', 1000);
+            this.animateLanternHiveProgressStep('flux-generation', 1000);
+            
+            // Wait for progress animation to complete
+            setTimeout(() => {
+                if (result.final_response) {
+                    this.currentWorkflow.lanternhiveResult = result;
+                    this.displayLanternHiveResult(result);
+                    
+                    // Generate FLUX code
+                    const fluxCode = this.generateFLUXFromWorkflow();
+                    this.currentWorkflow.fluxCode = fluxCode;
+                    
+                    // Auto-advance to FLUX step
+                    setTimeout(() => {
+                        this.completeStep('step-lanternhive');
+                        this.activateStep('step-flux');
+                        this.displayFLUXCode(fluxCode);
+                    }, 2000);
+                } else {
+                    this.hideLanternHiveThinking();
+                    this.addConsoleMessage('Error: LanternHive analysis failed', 'error');
+                }
+            }, 1500);
+            
         } catch (error) {
             this.hideLanternHiveThinking();
             this.addConsoleMessage(`Error: ${error.message}`, 'error');

@@ -163,6 +163,20 @@
                                         <span>.</span><span>.</span><span>.</span>
                                     </div>
                                 </div>
+                                <div class="progress-container">
+                                    <div class="progress-step" id="progress-cognitive-analysis">
+                                        <div class="progress-bar"><div class="progress-fill" id="progress-fill-cognitive-analysis"></div></div>
+                                        <span class="progress-label">Cognitive Analysis</span>
+                                    </div>
+                                    <div class="progress-step" id="progress-strategy-application">
+                                        <div class="progress-bar"><div class="progress-fill" id="progress-fill-strategy-application"></div></div>
+                                        <span class="progress-label">Strategy Application</span>
+                                    </div>
+                                    <div class="progress-step" id="progress-flux-generation">
+                                        <div class="progress-bar"><div class="progress-fill" id="progress-fill-flux-generation"></div></div>
+                                        <span class="progress-label">FLUX Code Generation</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="lanternhive-response" id="lanternhive-response" style="display: none;">
                                 <div class="response-content" id="lanternhive-analysis"></div>
@@ -185,8 +199,8 @@
                                     <button class="btn btn--secondary" id="copy-flux-btn">Copy Code</button>
                                 </div>
                             </div>
-                        </div>
                     </div>
+                </div>
 
                     <!-- Workflow Controls -->
                     <div class="workflow-controls">
@@ -361,29 +375,29 @@
             <div class="controls-grid">
                 <!-- Connection Controls -->
                 <div class="control-section">
-                    <h4>Connection Controls</h4>
+                <h4>Connection Controls</h4>
                     <div class="control-buttons">
-                        <button class="btn btn--secondary" id="create-connection-btn">Create Connection</button>
-                        <button class="btn btn--secondary" id="disconnect-all-btn">Disconnect All</button>
-                    </div>
+                <button class="btn btn--secondary" id="create-connection-btn">Create Connection</button>
+                <button class="btn btn--secondary" id="disconnect-all-btn">Disconnect All</button>
+            </div>
                 </div>
 
                 <!-- Memory Controls -->
                 <div class="control-section">
-                    <h4>Memory Controls</h4>
+                <h4>Memory Controls</h4>
                     <div class="control-buttons">
-                        <button class="btn btn--secondary" id="allocate-memory-btn">Allocate Floating Memory</button>
-                        <button class="btn btn--secondary" id="garbage-collect-btn">Garbage Collect</button>
-                    </div>
+                <button class="btn btn--secondary" id="allocate-memory-btn">Allocate Floating Memory</button>
+                <button class="btn btn--secondary" id="garbage-collect-btn">Garbage Collect</button>
+            </div>
                 </div>
 
                 <!-- Transfer Controls -->
                 <div class="control-section">
-                    <h4>Transfer Controls</h4>
+                <h4>Transfer Controls</h4>
                     <div class="control-buttons">
-                        <button class="btn btn--secondary" id="initiate-transfer-btn">Initiate SIIG Transfer</button>
-                        <button class="btn btn--secondary" id="generate-fingerprint-btn">Generate Fingerprint</button>
-                    </div>
+                <button class="btn btn--secondary" id="initiate-transfer-btn">Initiate SIIG Transfer</button>
+                <button class="btn btn--secondary" id="generate-fingerprint-btn">Generate Fingerprint</button>
+            </div>
                 </div>
 
             </div>
